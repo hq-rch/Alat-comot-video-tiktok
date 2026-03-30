@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omni TikTok Downloader</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { background: #1e1e1e; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #fe2c55; margin-bottom: 5px; }
+        .author { text-align: center; font-size: 12px; color: #888; margin-bottom: 20px; }
+        input { width: 94%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #333; background: #2b2b2b; color: white; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #fe2c55; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #ef2950; }
+        
+        /* Fitur Saweria */
+        .saweria-btn { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #faae2b; 
+            color: #000; 
+            text-decoration: none; 
+            padding: 10px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            margin-top: 15px; 
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .saweria-btn:hover { background: #d99622; }
+        .saweria-btn img { width: 20px; margin-right: 8px; }
+
+        #result { margin-top: 20px; display: none; text-align: center; }
+        .video-preview { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+        .dl-btn { background: #28a745; text-decoration: none; display: block; padding: 10px; border-radius: 8px; color: white; margin-top: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>TikTok DL No WM</h2>
+    <div class="author">Developed by badag007</div>
+    
+    <input type="text" id="url" placeholder="Paste link TikTok di sini...">
+    <button onclick="downloadVideo()" id="btn-get">AMBIL VIDEO</button>
+
+    <div style="font-size: 13px; color: #bbb; background: #2b2b2b; padding: 10px; border-radius: 8px; margin-top: 15px; text-align: center; border: 1px dashed #555;">
+        ⚠️ <strong>Cara Download:</strong> <br>
+        Setelah link video TikTok ditempel dan kamu tekan "AMBIL VIDEO", tunggu sampai videonya nongol. <br>
+        Kalau sudah nongol, tekan <strong>titik 3 (&#8942;)</strong> di video lalu pilih <strong>Download</strong>. <br>
+        (Atau gunakan tombol hijau di bawah kalau ada).
+    </div>
+
+    <a href="https://saweria.co/badag007" target="_blank" class="saweria-btn">
+        <img src="https://saweria.co/favicon.ico" alt="icon">
+        Traktir Kopi badag007
+    </a>
+
+    <div id="result">
+        <hr style="border: 0.5px solid #333; margin: 20px 0;">
+        <p id="title" style="font-size: 14px; margin-bottom: 10px;"></p>
+        <video id="preview" class="video-preview" controls></video>
+        <a id="download-link" class="dl-btn" href="#" target="_blank">DOWNLOAD SEKARANG</a>
+    </div>
+</div>
+
+<script>
+    async function downloadVideo() {
+        const urlInput = document.getElementById('url').value;
+        const btn = document.getElementById('btn-get');
+        const resultDiv = document.getElementById('result');
+        
+        if (!urlInput) return alert("Isi linknya dulu bray!");
+
+        btn.innerText = "Sabar, lagi proses...";
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(urlInput)}`);
+            const data = await response.json();
+
+            if (data.code === 0) {
+                const videoData = data.data;
+                document.getElementById('title').innerText = videoData.title;
+                document.getElementById('preview').src = videoData.play;
+                document.getElementById('download-link').href = videoData.play;
+                
+                resultDiv.style.display = "block";
+            } else {
+                alert("Gagal ambil video. Pastikan link bener ya.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Ada masalah koneksi/API.");
+        } finally {
+            btn.innerText = "AMBIL VIDEO";
+            btn.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>
